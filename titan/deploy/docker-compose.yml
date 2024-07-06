@@ -1,0 +1,13 @@
+
+# Join Telegram: https://t.me/+ZOQ2jcLKI3hkNjFl
+
+services:
+  titan-node-0:
+    container_name: titan-node-0
+    image: nezha123/titan-edge:latest
+    volumes:
+      - ./data:/root/.titanedge
+    network_mode: "host"
+    environment:
+      - TZ=Asia/Shanghai
+    restart: always
