@@ -8,9 +8,11 @@
 
 >【2024-07-07】当前该项目正在进行第三轮测试
 
+>【2024-07-15】社区空投任务已经结束
+
 ### 相关链接
 
-1. 空投任务 ( [https://titannet.io/airdrops](https://titannet.io/airdrops/?inviteCode=cppae4363k8c73cdd530) )
+1. ~~空投任务 ( [https://titannet.io/airdrops](https://titannet.io/airdrops/?inviteCode=cppae4363k8c73cdd530) )~~ 已结束
 
 2. 节点挖矿 ( [https://test1.titannet.io](https://test1.titannet.io/intiveRegister?code=jARato) )
 
@@ -27,11 +29,12 @@
 > 领的水用于进行质押挖矿测试
 
 - [x] 自动领水：到时间自动发送消息领水，支持多个 DC 账号并行
-- [x] 反作弊检查：在基础间隔时间（2 小时）上可增加随机时间，防止领水时间存在规律
+- [x] 反作弊检查
 
-#### 模拟交易系统
+#### 模拟交易系统 | Trading Simulation System  ( [titan/auto-tx](./titan/auto-tx/) )
 
-> 为钱包增加更多相关的测试交易记录
+> 为钱包增加更多测试币交易记录
 
-- [ ] 多个钱包随机互相转帐
-- [ ] 自动领水，防止因 Gas 不足导致模拟交易停止运行，维持各钱包余额动态平衡
+- [x] 支持 Titan，多个钱包随机互相转帐，程序自动维持各钱包余额动态平衡 | Currently supports Titan,, Works with any number of wallets, the program automatically maintains dynamic balance among all wallets
+- [x] 可设置：每次转账间隔时间范围、每次转账金额范围 | Configurable: time range between transfers, amount range for each transfer
+- [x] 容器化部署 | Supports containerized deployment

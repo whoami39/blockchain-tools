@@ -1,0 +1,6 @@
+services:
+  auto-tx:
+    build: .
+    network_mode: "host"
+    env_file:
+      - .env
