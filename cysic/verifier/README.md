@@ -24,7 +24,9 @@ services:
     environment:
       - EVM_ADDR="<your-evm-address>"
     volumes:
-      - ./data:/app/data
+      - ./data/data:/app/data
+      - ./data/cysic/:/root/.cysic/
+      - ./data/scroll_prover:/root/.scroll_prover
     network_mode: "host"
     restart: unless-stopped
 ```
