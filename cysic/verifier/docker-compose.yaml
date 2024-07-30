@@ -1,0 +1,9 @@
+services:
+  verifier:
+    build: .
+    environment:
+      - EVM_ADDR="<your-evm-address>"
+    volumes:
+      - ./data:/app/data
+    network_mode: "host"
+    restart: unless-stopped
