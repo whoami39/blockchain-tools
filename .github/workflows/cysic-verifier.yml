@@ -42,7 +42,6 @@ jobs:
           context: cysic/verifier
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/cysic-verifier:${{ github.sha }}
             ${{ secrets.DOCKER_USERNAME }}/cysic-verifier:latest
             ${{ secrets.DOCKER_USERNAME }}/cysic-testnet-verifier:latest
             ${{ secrets.DOCKER_USERNAME }}/cysic-verifier:v1
