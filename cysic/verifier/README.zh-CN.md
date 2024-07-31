@@ -2,10 +2,11 @@
 
 **简体中文** | [English](./README.md)
 
-> 对 [官方教程](https://medium.com/@cysic/join-the-cysic-testnet-as-a-verifier-7b9f31674b41) 的补充：**使用 Docker 运行 Verifier**，参与 Cysic 测试网，**持续更新...**
+> 对 [官方教程](https://medium.com/@cysic/join-the-cysic-testnet-as-a-verifier-7b9f31674b41) 的补充：**使用 Docker 运行 Cysic Verifier**，参与 Cysic 测试网，**持续更新...**
 
-- 镜像构建完全开源，无任何风险
-- 自动重启，不用担心掉线
+- 隐私性：Docker 镜像基于官方提供二进制文件构建，构建过程完全开源，无任何风险
+- 稳定性：自动重启，不用担心掉线
+- 隔离性：基于容器，理论上支持多开
 
 ## Docker
 
@@ -23,6 +24,7 @@ services:
     image: whoami39/cysic-verifier:latest
     environment:
       - EVM_ADDR="<your-evm-address>"
+      - CHAIN_ID=534352
     volumes:
       - ./data/data:/app/data
       - ./data/cysic/:/root/.cysic/

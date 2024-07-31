@@ -14,7 +14,7 @@ fi
 
 echo
 echo
-echo "Successfully updated config.yaml with EVM_ADDR: \`$EVM_ADDR\`"
+echo "EVM_ADDR: \`$EVM_ADDR\`, CHAIN_ID: $CHAIN_ID"
 echo
 echo "- Telegram: https://t.me/blockchain_minter"
 echo "- Github: https://github.com/whoami39/blockchain-tools/tree/main/cysic/verifier"

@@ -2,10 +2,11 @@
 
 **English** | [简体中文](./README.zh-CN.md)
 
-Supplement to the [official tutorial](https://medium.com/@cysic/join-the-cysic-testnet-as-a-verifier-7b9f31674b41): **Run Verifier using Docker**, participate in the Cysic testnet, **continuously updated updated...**
+Supplement to the [official tutorial](https://medium.com/@cysic/join-the-cysic-testnet-as-a-verifier-7b9f31674b41): **Run Cysic Verifier using Docker**, participate in the Cysic testnet, **continuously updated...**
 
-- Fully open-source image building, with no risks involved
-- Automatic restart, no need to worry about disconnections
+- Privacy: Docker image is built based on the officially provided binary files. The build process is completely open-source, with no risks.
+- Stability: Automatic restart, no need to worry about disconnections.
+- Isolation: Container-based, theoretically supports multiple instances.
 
 ## Docker
 
@@ -23,6 +24,7 @@ services:
     image: whoami39/cysic-verifier:latest
     environment:
       - EVM_ADDR="<your-evm-address>"
+      - CHAIN_ID=534352
     volumes:
       - ./data/data:/app/data
       - ./data/cysic/:/root/.cysic/

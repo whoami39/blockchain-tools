@@ -12,5 +12,5 @@ WORKDIR /app
 COPY --from=dl /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=dl /app/ /app/
 
-ENV LD_LIBRARY_PATH=/app
+ENV LD_LIBRARY_PATH=/app CHAIN_ID=534352
 ENTRYPOINT ["/app/entrypoint.sh", "/app/verifier"]
