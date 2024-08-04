@@ -1,0 +1,7 @@
+services:
+  dc-sender:
+    build: .
+    volumes:
+      - ./config.py:/app/config.py
+    network_mode: "host"
+    restart: unless-stopped
