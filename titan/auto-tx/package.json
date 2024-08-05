@@ -1,0 +1,23 @@
+{
+  "name": "auto-tx",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whoami39/blockchain-tools.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/whoami39/blockchain-tools/issues"
+  },
+  "homepage": "https://github.com/whoami39/blockchain-tools#readme",
+  "description": "",
+  "dependencies": {
+    "@cosmjs/stargate": "^0.32.4",
+    "dotenv": "^16.4.5"
+  }
+}
