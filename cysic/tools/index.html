@@ -66,7 +66,20 @@
             margin-top: 10px;
             display: none;
         }
-
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         footer {
             margin-top: 30px;
             border-top: 1px solid #ddd;
@@ -97,7 +110,7 @@
     <div id="totalInfo">
         <p>Total number of verifiers: <span id="totalVerifiers"></span></p>
     </div>
-
+    <div id="loader" class="loader"></div>
     <div id="result"></div>
     <footer>
         <p>
@@ -128,13 +141,16 @@
         async function search(address) {
             const resultDiv = document.getElementById('result');
             const totalInfoDiv = document.getElementById('totalInfo');
+            const loader = document.getElementById('loader');
             
             resultDiv.style.display = 'none';
             totalInfoDiv.style.display = 'none';
             resultDiv.innerHTML = '';
+            loader.style.display = 'block';
 
             try {
                 const verifier = await searchVerifier(address);
+                loader.style.display = 'none';
                 resultDiv.innerHTML = `
                     <p><strong>ID:</strong> ${verifier.id}</p>
                     <p><strong>Name:</strong> ${verifier.name}</p>
@@ -146,6 +162,7 @@
                 resultDiv.style.display = 'block';
             } catch (error) {
                 console.error('Error in search:', error);
+                loader.style.display = 'none';
                 resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
                 resultDiv.style.display = 'block';
             }
@@ -163,22 +180,22 @@
                 const fullData = await fullResponse.json();
 
                 if (!fullData.data || !fullData.data.list || !Array.isArray(fullData.data.list)) {
-                throw new Error('Invalid data structure received from API');
+                    throw new Error('Invalid data structure received from API');
                 }
 
                 const verifier = fullData.data.list.find(v => v.claim_reward_address === searchAddress);
 
                 if (!verifier) {
-                throw new Error('No data found for the given address');
+                    throw new Error('No data found for the given address');
                 }
 
                 return {
-                id: verifier.ID,
-                name: verifier.name,
-                description: verifier.description,
-                status: verifier.status === 1 ? 'Accept' : 'Pending',
-                address: verifier.claim_reward_address,
-                detailsUrl: `https://testnet.cysic.xyz/m/dashboard/verifier/${verifier.ID}`
+                    id: verifier.ID,
+                    name: verifier.name,
+                    description: verifier.description,
+                    status: verifier.status === 1 ? 'Accept' : 'Pending',
+                    address: verifier.claim_reward_address,
+                    detailsUrl: `https://testnet.cysic.xyz/m/dashboard/verifier/${verifier.ID}`
                 };
             } catch (error) {
                 console.error('Error in searchVerifier:', error);
