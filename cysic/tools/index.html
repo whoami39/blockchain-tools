@@ -27,19 +27,34 @@
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px 0 0 4px;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
+
+        #addressInput:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
         button {
             padding: 10px 20px;
             font-size: 16px;
             background-color: #3498db;
             color: white;
-            border: none;
+            border: 1px solid #3498db;
             border-radius: 0 4px 4px 0;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
         }
+
         button:hover {
             background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
         #result, #totalInfo {
             margin-top: 20px;
@@ -202,6 +217,12 @@
                 throw error;
             }
         }
+        document.getElementById('addressInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                validateAndSearch();
+            }
+        });
         document.getElementById('addressInput').addEventListener('input', function() {
             const errorMessage = document.getElementById('addressError');
             if (this.value.trim() !== '' && !validateAddress(this.value.trim())) {
