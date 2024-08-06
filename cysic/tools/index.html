@@ -163,22 +163,22 @@
                 const fullData = await fullResponse.json();
 
                 if (!fullData.data || !fullData.data.list || !Array.isArray(fullData.data.list)) {
-                throw new Error('Invalid data structure received from API');
+                    throw new Error('Invalid data structure received from API');
                 }
 
                 const verifier = fullData.data.list.find(v => v.claim_reward_address === searchAddress);
 
                 if (!verifier) {
-                throw new Error('No data found for the given address');
+                    throw new Error('No data found for the given address');
                 }
 
                 return {
-                id: verifier.ID,
-                name: verifier.name,
-                description: verifier.description,
-                status: verifier.status === 1 ? 'Accept' : 'Pending',
-                address: verifier.claim_reward_address,
-                detailsUrl: `https://testnet.cysic.xyz/m/dashboard/verifier/${verifier.ID}`
+                    id: verifier.ID,
+                    name: verifier.name,
+                    description: verifier.description,
+                    status: verifier.status === 1 ? 'Accept' : 'Pending',
+                    address: verifier.claim_reward_address,
+                    detailsUrl: `https://testnet.cysic.xyz/m/dashboard/verifier/${verifier.ID}`
                 };
             } catch (error) {
                 console.error('Error in searchVerifier:', error);
