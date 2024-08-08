@@ -42,7 +42,7 @@ func monitorContainerLogs(ctx context.Context, cli *client.Client, containerName
 		if len(matches) == 2 {
 			txHash := matches[1]
 			log.Printf("Container %s, TxHash: %s", containerName, txHash)
-			message := fmt.Sprintf("Container `%s` has completed a task: txhash is: `%s`", containerName, txHash)
+			message := fmt.Sprintf("Container `%s` has completed a task (TxHash: `%s`)", containerName, txHash)
 			sendFeishuMessage(message, webhookURL)
 		}
 	}
