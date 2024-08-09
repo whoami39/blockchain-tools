@@ -11,14 +11,16 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	_ "github.com/joho/godotenv/autoload"
 )
 
-func monitorContainerLogs(ctx context.Context, cli *client.Client, containerName, webhookURL string) {
+func monitorContainerLogs(ctx context.Context, cli *client.Client, containerName, webhookURL string, notificationDelay time.Duration) {
 	options := container.LogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
@@ -43,7 +45,7 @@ func monitorContainerLogs(ctx context.Context, cli *client.Client, containerName
 			txHash := matches[1]
 			log.Printf("Container %s, TxHash: %s", containerName, txHash)
 			message := fmt.Sprintf("Container `%s` has completed a task (TxHash: `%s`)", containerName, txHash)
-			sendFeishuMessage(message, webhookURL)
+			go sendDelayedFeishuMessage(message, webhookURL, notificationDelay)
 		}
 	}
 
@@ -52,7 +54,11 @@ func monitorContainerLogs(ctx context.Context, cli *client.Client, containerName
 	}
 }
 
-// Send a message to Feishu
+func sendDelayedFeishuMessage(message, webhookURL string, notificationDelay time.Duration) {
+	time.Sleep(notificationDelay)
+	sendFeishuMessage(message, webhookURL)
+}
+
 func sendFeishuMessage(message, webhookURL string) {
 	payload := map[string]interface{}{
 		"msg_type": "text",
@@ -80,6 +86,34 @@ func sendFeishuMessage(message, webhookURL string) {
 	}
 }
 
+func parseContainers(input string) []string {
+	var containers []string
+	inQuote := false
+	var current strings.Builder
+
+	for _, char := range input {
+		switch char {
+		case '"':
+			inQuote = !inQuote
+		case ',':
+			if !inQuote {
+				containers = append(containers, strings.TrimSpace(current.String()))
+				current.Reset()
+			} else {
+				current.WriteRune(char)
+			}
+		default:
+			current.WriteRune(char)
+		}
+	}
+
+	if current.Len() > 0 {
+		containers = append(containers, strings.TrimSpace(current.String()))
+	}
+
+	return containers
+}
+
 func main() {
 	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
@@ -87,16 +121,29 @@ func main() {
 		log.Fatal("Error creating Docker client:", err)
 	}
 
-	containers := strings.Split(os.Getenv("CONTAINERS"), ",")
+	containers := parseContainers(os.Getenv("CONTAINERS"))
 	webhookURL := os.Getenv("FEISHU_WEBHOOK")
+    notificationDelaySecStr := os.Getenv("NOTIFICATION_DELAY_SEC")
+    var notificationDelaySec int
+    if notificationDelaySecStr == "" {
+        notificationDelaySec = 0
+    } else {
+        var err error
+        notificationDelaySec, err = strconv.Atoi(notificationDelaySecStr)
+        if err != nil {
+            log.Printf("Invalid NOTIFICATION_DELAY_SEC value: %s. Using default (0 seconds).", notificationDelaySecStr)
+            notificationDelaySec = 0
+        }
+    }
 
-	fmt.Printf("\nContainers: %s\n", os.Getenv("CONTAINERS"))
-	fmt.Printf("Feishu Webhook: %s\n\n", webhookURL)
+    fmt.Printf("\nContainers: %v\n", containers)
+    fmt.Printf("Feishu Webhook: %s\n", webhookURL)
+    fmt.Printf("Notification Delay: %d seconds\n\n", notificationDelaySec)
 	fmt.Println("- Telegram: https://t.me/blockchain_minter")
 	fmt.Println("- Github: https://github.com/whoami39\n")
 
 	for _, containerName := range containers {
-		go monitorContainerLogs(ctx, cli, containerName, webhookURL)
+		go monitorContainerLogs(ctx, cli, containerName, webhookURL, time.Duration(notificationDelaySec)*time.Second)
 	}
 
 	select {}
