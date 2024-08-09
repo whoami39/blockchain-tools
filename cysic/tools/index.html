@@ -99,14 +99,13 @@
             margin-top: 30px;
             border-top: 1px solid #ddd;
             padding-top: 0px;
-            text-align: left;
+            text-align: right;
             font-size: 12px;
             font-style: italic;
         }
         footer a {
             color: #3498db;
             text-decoration: none;
-            margin-right: 20px;
         }
         footer a:hover {
             text-decoration: underline;
@@ -130,6 +129,7 @@
     <footer>
         <p>
             <a href="https://github.com/whoami39/blockchain-tools" target="_blank">View on GitHub</a>
+            <span id="blockHeight" style="float: left;"></span>
         </p>
     </footer>
     <script>
@@ -255,6 +255,51 @@
                 errorMessage.style.display = 'none';
             }
         });
+
+        const graphqlWebsocket = "wss://hasura-testnet.prover.xyz/v1/graphql";
+        const blockHeightElement = document.getElementById('blockHeight');
+        const socket = new WebSocket(graphqlWebsocket, ["graphql-ws"], {
+            headers: {
+                "Origin": "https://explorer-testnet.prover.xyz"
+            }
+        });
+        const query = `
+            subscription {
+                blocks: block(limit: 1, order_by: {height: desc}) {
+                    height
+                    timestamp
+                    __typename
+                }
+            }
+        `;
+
+        socket.onopen = function() {
+            socket.send(JSON.stringify({
+                type: 'connection_init',
+                payload: {}
+            }));
+        };
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === 'connection_ack') {
+                socket.send(JSON.stringify({
+                    id: "1",
+                    type: 'start',
+                    payload: {
+                        variables: {},
+                        extensions: {},
+                        operationName: null,
+                        query: query
+                    }
+                }));
+            } else if (data.type === 'data') {
+                const block = data.payload.data.blocks[0];
+                const blockHeight = `Block Height: <strong>${block.height}</strong> (${new Date(block.timestamp).toLocaleString()} UTC)`;
+                // const blockHeight = `Block Height: <strong><a href="https://explorer-testnet.prover.xyz/blocks/${block.height}" target="_blank">${block.height}</a></strong> (${new Date(block.timestamp).toLocaleString()} UTC)`;
+                document.getElementById('blockHeight').innerHTML = blockHeight;
+            }
+        };
     </script>
 </body>
 </html>
