@@ -133,6 +133,9 @@
         </p>
     </footer>
     <script>
+        function maskAddress(address) {
+            return address.slice(0, 5) + '*'.repeat(7) + address.slice(-4);
+        }
         function validateAddress(address) {
             const addressRegex = /^0x[a-fA-F0-9]{40}$/;
             return addressRegex.test(address);
@@ -164,16 +167,35 @@
             loader.style.display = 'block';
 
             try {
-                const verifier = await searchVerifier(address);
+                const verifiers = await searchVerifier(address);
                 loader.style.display = 'none';
-                resultDiv.innerHTML = `
-                    <p><strong>ID:</strong> ${verifier.id}</p>
-                    <p><strong>Name:</strong> ${verifier.name}</p>
-                    <p><strong>Description:</strong> ${verifier.description}</p>
-                    <p><strong>Status:</strong> ${verifier.status}</p>
-                    <p><strong>Address:</strong> ${verifier.address}</p>
-                    <p><strong>Details:</strong> <a href="${verifier.detailsUrl}" target="_blank">${verifier.detailsUrl}</a></p>
-                `;
+                
+                if (verifiers.length === 1) {
+                    const verifier = verifiers[0];
+                    resultDiv.innerHTML = `
+                        <p><strong>ID:</strong> ${verifier.id}</p>
+                        <p><strong>Name:</strong> ${verifier.name}</p>
+                        <p><strong>Description:</strong> ${verifier.description}</p>
+                        <p><strong>Status:</strong> ${verifier.status}</p>
+                        <p><strong>Address:</strong> ${verifier.address}</p>
+                        <p><strong>Details:</strong> <a href="${verifier.detailsUrl}" target="_blank">${verifier.detailsUrl}</a></p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p>Found ${verifiers.length} matching verifiers:</p>
+                        ${verifiers.map(verifier => `
+                            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                                <p><strong>ID:</strong> ${verifier.id}</p>
+                                <p><strong>Name:</strong> ${verifier.name}</p>
+                                <p><strong>Description:</strong> ${verifier.description}</p>
+                                <p><strong>Status:</strong> ${verifier.status}</p>
+                                <p><strong>Address:</strong> ${verifier.address}</p>
+                                <p><strong>Details:</strong> <a href="${verifier.detailsUrl}" target="_blank">${verifier.detailsUrl}</a></p>
+                            </div>
+                        `).join('')}
+                    `;
+                }
+
                 resultDiv.style.display = 'block';
             } catch (error) {
                 console.error('Error in search:', error);
@@ -198,20 +220,21 @@
                     throw new Error('Invalid data structure received from API');
                 }
 
-                const verifier = fullData.data.list.find(v => v.claim_reward_address === searchAddress);
+                const maskedAddress = maskAddress(searchAddress);
+                const matchedVerifiers = fullData.data.list.filter(v => v.claim_reward_address === maskedAddress);
 
-                if (!verifier) {
+                if (matchedVerifiers.length === 0) {
                     throw new Error('No data found for the given address');
                 }
 
-                return {
+                return matchedVerifiers.map(verifier => ({
                     id: verifier.ID,
                     name: verifier.name,
                     description: verifier.description,
                     status: verifier.status === 1 ? 'Accept' : 'Pending',
                     address: verifier.claim_reward_address,
                     detailsUrl: `https://testnet.cysic.xyz/m/dashboard/verifier/${verifier.ID}`
-                };
+                }));
             } catch (error) {
                 console.error('Error in searchVerifier:', error);
                 throw error;
