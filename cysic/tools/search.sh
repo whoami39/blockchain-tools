@@ -82,8 +82,14 @@ fi
 # Use curl to get API data with the obtained total
 json_response=$(curl -s "https://api-testnet.prover.xyz/api/v1/verifier?pageNum=0&pageSize=$total")
 
-# Use grep to find lines containing the specified address
-filtered_json=$(echo "$json_response" | grep -o "{[^}]*\"claim_reward_address\":\"$search_address\"[^}]*}")
+# Use sed to partially hide the user-provided address
+hidden_search_address=$(echo "$search_address" | sed 's/^\(0x[0-9a-fA-F]\{3\}\)[0-9a-fA-F]*\([0-9a-fA-F]\{4\}\)$/\1*******\2/g')
+
+# Escape special characters in the partially hidden address
+escaped_hidden_search_address=$(echo "$hidden_search_address" | sed 's/[]\/$*.^[]/\\&/g')
+
+# Use grep to find lines containing the partially hidden address
+filtered_json=$(echo "$json_response" | grep -o "{[^}]*\"claim_reward_address\":\"$escaped_hidden_search_address\"[^}]*}")
 
 # Exit script if no matching data is found
 if [[ -z $filtered_json ]]; then
@@ -91,26 +97,32 @@ if [[ -z $filtered_json ]]; then
     exit 1
 fi
 
-# Extract required fields using sed
-id=$(echo "$filtered_json" | sed 's/.*"ID":\([^,]*\).*/\1/')
-name=$(echo "$filtered_json" | sed 's/.*"name":"\([^"]*\)".*/\1/')
-description=$(echo "$filtered_json" | sed 's/.*"description":"\([^"]*\)".*/\1/')
-status=$(echo "$filtered_json" | sed 's/.*"status":\([^,}]*\).*/\1/')
-address=$(echo "$filtered_json" | sed 's/.*"claim_reward_address":"\([^"]*\)".*/\1/')
+# Split the filtered JSON into an array, with each element representing a matched item
+IFS=$'\n' read -d '' -r -a matched_items <<< "$filtered_json"
 
 # Output results
-echo 
-echo "- ID: $id"
-echo "- Name: $name"
-echo "- Description: $description"
-if [ "$status" -eq 1 ]; then
-    echo "- Status: Accept"
-else
-    echo "- Status: Pending"
-fi
-echo "- Address: $address"
-echo "- Details: https://testnet.cysic.xyz/m/dashboard/verifier/$id" 
-echo 
+echo "Found ${#matched_items[@]} matching item(s) for address: $search_address"
+# Iterate over the matched items and extract the required fields
+for item in "${matched_items[@]}"; do
+    id=$(echo "$item" | sed 's/.*"ID":\([^,]*\).*/\1/')
+    name=$(echo "$item" | sed 's/.*"name":"\([^"]*\)".*/\1/')
+    description=$(echo "$item" | sed 's/.*"description":"\([^"]*\)".*/\1/')
+    status=$(echo "$item" | sed 's/.*"status":\([^,}]*\).*/\1/')
+    address=$(echo "$item" | sed 's/.*"claim_reward_address":"\([^"]*\)".*/\1/')
+
+    echo
+    echo "- ID: $id"
+    echo "- Name: $name"
+    echo "- Description: $description"
+    if [ "$status" -eq 1 ]; then
+        echo "- Status: Accept"
+    else
+        echo "- Status: Pending"
+    fi
+    echo "- Address: $search_address"
+    echo "- Details: https://testnet.cysic.xyz/m/dashboard/verifier/$id"
+    echo
+done
 
 # Output additional information if verbose mode is enabled
 if $verbose; then
