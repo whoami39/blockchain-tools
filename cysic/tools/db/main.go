@@ -72,13 +72,37 @@ func main() {
 
 	// Handle different command options
 	if len(os.Args) == 2 {
-		// Clear the tasks table
-		_, err := db.Exec("DELETE FROM tasks")
+		// Begin a transaction
+		tx, err := db.Begin()
 		if err != nil {
+			printMsg(fmt.Sprintf("Error starting transaction: %v", err))
+			return
+		}
+
+		// Clear the tasks table
+		_, err = tx.Exec("DELETE FROM tasks")
+		if err != nil {
+			tx.Rollback()
 			printMsg(fmt.Sprintf("Error clearing tasks table: %v", err))
 			return
 		}
-		printMsg("Tasks table cleared successfully")
+
+		// Reset the auto-increment ID
+		_, err = tx.Exec("DELETE FROM sqlite_sequence WHERE name='tasks'")
+		if err != nil {
+			tx.Rollback()
+			printMsg(fmt.Sprintf("Error resetting auto-increment ID: %v", err))
+			return
+		}
+
+		// Commit the transaction
+		err = tx.Commit()
+		if err != nil {
+			printMsg(fmt.Sprintf("Error committing transaction: %v", err))
+			return
+		}
+
+		printMsg("Tasks table cleared and auto-increment ID reset successfully")
 	} else if len(os.Args) == 4 && os.Args[2] == "exec" {
 		// Execute a custom SQL command
 		sqlCommand := os.Args[3]

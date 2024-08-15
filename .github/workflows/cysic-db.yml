@@ -42,4 +42,4 @@ jobs:
           context: cysic/tools/db
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/cysic-db:latest
+            ${{ secrets.DOCKER_USERNAME }}/cysic-verifier-db-cli:latest
