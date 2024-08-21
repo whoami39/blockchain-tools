@@ -1,0 +1,8 @@
+services:
+  cysic-aleo-prover:
+    build: .
+    environment:
+      - WORKER_NAME=
+      - ADDRESS=
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
