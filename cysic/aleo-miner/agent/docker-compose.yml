@@ -1,0 +1,5 @@
+services:
+  aleo-miner-agent:
+    build: .
+    ports:
+      - 9000:9000
