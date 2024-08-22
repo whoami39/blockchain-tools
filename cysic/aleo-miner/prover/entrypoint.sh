@@ -29,7 +29,7 @@ if [ -z "$POOL_HOST" ]; then
 fi
 
 if [ -z "$WORKER_NAME" ]; then
-    WORKER_NAME=$(hostname -i)
+    WORKER_NAME=$(hostname)
 fi
 
 ADDRESS_WORKER=$ADDRESS.$WORKER_NAME
@@ -52,7 +52,10 @@ if [[ -n "$SOCKS_HOST" ]]; then
     PROVER_PARAMS=$PROVER_PARAMS" -sock $SOCKS_HOST"
 fi
 
-echo "Starting cysic-aleo-prover with parameters: $PROVER_PARAMS"
+echo
+echo
+echo "Parameters: \`$PROVER_PARAMS\`"
+echo
 echo
 echo "- Telegram: https://t.me/blockchain_minter"
 echo "- Github: https://github.com/whoami39/blockchain-tools/tree/main/cysic/aleo-miner"
