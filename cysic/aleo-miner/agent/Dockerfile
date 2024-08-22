@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as dl
+FROM ubuntu:22.04 AS dl
 
 ARG VERSION=v0.1.15
 ENV DEBIAN_FRONTEND=noninteractive
@@ -10,12 +10,11 @@ RUN wget https://github.com/cysic-labs/aleo-miner/releases/download/${VERSION}/c
     && mv cysic-prover-agent-${VERSION} app \
     && rm -f cysic-prover-agent-${VERSION}.tgz
 
-FROM scratch
+FROM ubuntu:22.04
 
 COPY --from=dl /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=dl /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=dl /app/cysic-prover-agent .
+COPY entrypoint.sh /entrypoint.sh
 
-ENV AGENT_HOST=0.0.0.0:9000
-ENV NOTIFY_HOST=notify.asia.aleopool.cysic.xyz:38883
-ENTRYPOINT [ "/cysic-prover-agent", "-l", "${AGENT_HOST}", "-notify", "${NOTIFY_HOST}" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
