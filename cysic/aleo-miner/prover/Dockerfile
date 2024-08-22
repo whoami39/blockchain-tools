@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as dl
+FROM ubuntu:22.04 AS dl
 
 ARG VERSION=v0.1.17
 ENV DEBIAN_FRONTEND=noninteractive
@@ -10,7 +10,7 @@ RUN wget https://github.com/cysic-labs/aleo-miner/releases/download/${VERSION}/c
     && mv cysic-aleo-prover-${VERSION} app \
     && rm -f cysic-aleo-prover-${VERSION}.tgz
 
-FROM nvidia/cuda:12.2.2-runtime-ubuntu22.04
+FROM nvidia/cuda:12.2.2-base-ubuntu22.04
 
 WORKDIR /app
 COPY --from=dl /usr/share/zoneinfo /usr/share/zoneinfo

@@ -2,7 +2,15 @@ services:
   cysic-aleo-prover:
     build: .
     environment:
-      - WORKER_NAME=
       - ADDRESS=
+      - WORKER_NAME=
+      - AGENT_HOST=
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+          reservations:
+              devices:
+                  - driver: "nvidia"
+                    count: "all"
+                    capabilities: ["gpu"]
