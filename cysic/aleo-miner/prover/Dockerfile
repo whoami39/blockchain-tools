@@ -10,7 +10,7 @@ RUN wget https://github.com/cysic-labs/aleo-miner/releases/download/${VERSION}/c
     && mv cysic-aleo-prover-${VERSION} app \
     && rm -f cysic-aleo-prover-${VERSION}.tgz
 
-FROM nvidia/cuda:12.2.2-base-ubuntu22.04
+FROM ubuntu:22.04
 
 WORKDIR /app
 COPY --from=dl /usr/share/zoneinfo /usr/share/zoneinfo
