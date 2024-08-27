@@ -1,0 +1,48 @@
+name: Build and push `aleo-oula-prover` docker image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - aleo/oula/prover/**
+      - .github/workflows/aleo-oula-prover.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - aleo/oula/prover/**
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up qemu
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v6
+        with:
+          file: aleo/oula/prover/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          context: aleo/oula/prover
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/oula-aleo-prover:latest
+            ${{ secrets.DOCKER_USERNAME }}/oula-aleo-prover:v1
+            ${{ secrets.DOCKER_USERNAME }}/oula-aleo-miner-prover:latest
+            ${{ secrets.DOCKER_USERNAME }}/oula-aleo-miner-prover:v1
