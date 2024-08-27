@@ -1,5 +1,5 @@
 services:
-  cysic-aleo-prover:
+  prover:
     build: .
     environment:
       - ADDRESS=

@@ -1,4 +1,4 @@
-name: Build and push `cysic-aleo-miner-prover` docker image
+name: Build and push `aleo-cysic-prover` docker image
 
 on:
   workflow_dispatch:
@@ -6,13 +6,13 @@ on:
     branches:
       - main
     paths:
-      - cysic/aleo-miner/prover/**
-      - .github/workflows/cysic-aleo-miner-prover.yml
+      - aleo/cysic/prover/**
+      - .github/workflows/aleo-cysic-prover.yml
   pull_request:
     branches:
       - main
     paths:
-      - cysic/aleo-miner/prover/**
+      - aleo/cysic/prover/**
 
 jobs:
   build-and-push:
@@ -37,10 +37,12 @@ jobs:
       - name: Build and push docker image
         uses: docker/build-push-action@v6
         with:
-          file: cysic/aleo-miner/prover/Dockerfile
+          file: aleo/cysic/prover/Dockerfile
           platforms: linux/amd64,linux/arm64
-          context: cysic/aleo-miner/prover
+          context: aleo/cysic/prover
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
+            ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-prover:latest
+            ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-prover:v1
             ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-miner-prover:latest
             ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-miner-prover:v1

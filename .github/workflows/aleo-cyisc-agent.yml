@@ -1,4 +1,4 @@
-name: Build and push `cysic-aleo-miner-agent` docker image
+name: Build and push `aleo-cysic-agent` docker image
 
 on:
   workflow_dispatch:
@@ -6,13 +6,13 @@ on:
     branches:
       - main
     paths:
-      - cysic/aleo-miner/agent/**
-      - .github/workflows/cysic-aleo-miner-agent.yml
+      - aleo/cysic/agent/**
+      - .github/workflows/aleo-cysic-agent.yml
   pull_request:
     branches:
       - main
     paths:
-      - cysic/aleo-miner/agent/**
+      - aleo/cysic/agent/**
 
 jobs:
   build-and-push:
@@ -37,10 +37,12 @@ jobs:
       - name: Build and push docker image
         uses: docker/build-push-action@v6
         with:
-          file: cysic/aleo-miner/agent/Dockerfile
+          file: aleo/cysic/agent/Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-          context: cysic/aleo-miner/agent
+          context: aleo/cysic/agent
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
+            ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-agent:latest
+            ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-agent:v1
             ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-miner-agent:latest
             ${{ secrets.DOCKER_USERNAME }}/cysic-aleo-miner-agent:v1
