@@ -1,0 +1,14 @@
+services:
+  prover:
+    build: .
+    environment:
+      - ACCOUNT=
+      - WORKER_NAME=aleo_prover_0
+    network_mode: "host"
+    deploy:
+      resources:
+          reservations:
+              devices:
+                  - driver: "nvidia"
+                    count: "all"
+                    capabilities: ["gpu"]
