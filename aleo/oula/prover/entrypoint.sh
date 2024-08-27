@@ -32,7 +32,7 @@ echo "Parameters: \`$PROVER_PARAMS\`"
 echo
 echo
 echo "- Telegram: https://t.me/blockchain_minter"
-echo "- Github: https://github.com/whoami39/blockchain-tools/tree/main/oula/aleo-miner"
+echo "- Github: https://github.com/whoami39/blockchain-tools/tree/main/aleo/oula/prover"
 echo
 
 /app/oula-aleo-prover $PROVER_PARAMS $REST_ARGS
