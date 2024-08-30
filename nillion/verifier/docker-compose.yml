@@ -1,0 +1,9 @@
+services:
+  nillion-verifier:
+    build: .
+    environment:
+      - RPC_ENDPOINT=
+      - BLOCK_START=
+      - BLOCK_OFFSET=
+    volumes:
+      - ./data:/var/tmp
