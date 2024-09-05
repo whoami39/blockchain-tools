@@ -2,7 +2,7 @@ services:
   f2pool-aleo-prover:
     build: .
     environment:
-      - WORKER=
+      - ACCOUNT=
     network_mode: "host"
     deploy:
       resources:
