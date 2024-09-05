@@ -1,0 +1,13 @@
+services:
+  f2pool-aleo-prover:
+    build: .
+    environment:
+      - ACCOUNT=
+    network_mode: "host"
+    deploy:
+      resources:
+          reservations:
+              devices:
+                  - driver: "nvidia"
+                    count: "all"
+                    capabilities: ["gpu"]
