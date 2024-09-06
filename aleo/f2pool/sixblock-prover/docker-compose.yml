@@ -1,5 +1,5 @@
 services:
-  f2pool-aleo-zkwork-prover:
+  f2pool-aleo-sixblock-prover:
     build: .
     environment:
       - ACCOUNT=
