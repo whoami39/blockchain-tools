@@ -1,5 +1,5 @@
 services:
-  zkwork_aleo_prover:
+  zkwork-aleo-prover:
     build: .
     environment:
       - ADDRESS=
