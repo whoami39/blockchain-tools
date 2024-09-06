@@ -1,0 +1,13 @@
+services:
+  zkwork_aleo_prover:
+    build: .
+    environment:
+      - ADDRESS=
+    network_mode: "host"
+    deploy:
+      resources:
+          reservations:
+              devices:
+                  - driver: "nvidia"
+                    count: "all"
+                    capabilities: ["gpu"]
