@@ -4,8 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y ca-certificates tzdata wget unzip \
     && rm -rf /var/lib/apt/lists/*
-RUN wget https://public-download-ase1.s3.ap-southeast-1.amazonaws.com/aleo-miner/Aleo+miner+2.11.44.zip \
-    && unzip Aleo+miner+*.zip \
+RUN wget https://public-download-ase1.s3.ap-southeast-1.amazonaws.com/aleo-miner/aleominer+2.11.47.zip \
+    && unzip aleominer*.zip \
     && mv aleominer f2pool-aleo-prover \
     && chmod +x f2pool-aleo-prover
 
