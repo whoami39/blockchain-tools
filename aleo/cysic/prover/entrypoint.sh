@@ -15,17 +15,14 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [ -z "$ADDRESS" ]; then
-    echo "--address param empty"
-    exit 1
-fi
+ADDRESS=${ADDRESS:-"aleo1lk4klsu09ekv4gd0q4ql2wkn7a0hkfcwamlsw9n79dmlyr9esu9qwra6cc"}
 
 if [ -z "$AGENT_HOST" ]; then
     AGENT_HOST="host.docker.internal:9000"
 fi
 
 if [ -z "$POOL_HOST" ]; then
-    POOL_HOST="tls://asia.aleopool.cysic.xyz:16699"
+    POOL_HOST="tls://pool.47s3rx.org:16699"
 fi
 
 if [ -z "$WORKER_NAME" ]; then
@@ -63,4 +60,4 @@ echo
 
 mkdir -p $PKG_DIR/log
 export LD_LIBRARY_PATH=$PKG_DIR:$LD_LIBRARY_PATH
-exec $PKG_DIR/cysic-aleo-prover $PROVER_PARAMS $REST_ARGS
+exec $PKG_DIR/aleo-prover $PROVER_PARAMS $REST_ARGS
