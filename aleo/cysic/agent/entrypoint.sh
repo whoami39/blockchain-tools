@@ -5,7 +5,7 @@ if [ -z "$AGENT_HOST" ]; then
 fi
 
 if [ -z "$NOTIFY_HOST" ]; then
-    NOTIFY_HOST="notify.asia.aleopool.cysic.xyz:38883"
+    NOTIFY_HOST="notify.47s3rx.org:38883"
 fi
 
 echo
@@ -17,4 +17,4 @@ echo "- Telegram: https://t.me/blockchain_minter"
 echo "- Github: https://github.com/whoami39/blockchain-tools/tree/main/cysic/aleo-miner"
 echo
 
-exec /cysic-prover-agent -l "${AGENT_HOST}" -notify "${NOTIFY_HOST}" "$@"
+exec /prover-agent -l "${AGENT_HOST}" -notify "${NOTIFY_HOST}" "$@"
