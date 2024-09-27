@@ -1,6 +1,6 @@
 FROM ubuntu:22.04 AS dl
 
-ARG VERSION=v0.2.1
+ARG VERSION=v0.2.2
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y ca-certificates tzdata wget \
