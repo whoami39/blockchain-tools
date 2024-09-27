@@ -1,11 +1,11 @@
 FROM ubuntu:22.04 AS dl
 
-ARG VERSION=v0.2.1
+ARG VERSION=v0.2.2
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y ca-certificates tzdata wget \
     && rm -rf /var/lib/apt/lists/*
-RUN wget https://github.com/6block/zkwork_aleo_gpu_worker/releases/download/${VERSION}/aleo_prover-${VERSION}.tar.gz \
+RUN wget https://github.com/6block/zkwork_aleo_gpu_worker/releases/download/${VERSION}/aleo_prover-${VERSION}_full.tar.gz \
     && tar -zxf aleo_prover-*.tar.gz \
     && mv ./aleo_prover/aleo_prover ./zkwork-aleo-prover \
     && chmod +x zkwork-aleo-prover
