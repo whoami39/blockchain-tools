@@ -2,9 +2,9 @@ FROM ubuntu:22.04 AS dl
 
 WORKDIR /app
 RUN apt-get update && apt-get install -y curl ca-certificates
-RUN curl -L https://cysic-verifiers.oss-accelerate.aliyuncs.com/verifier_linux > verifier \
+RUN curl -L https://github.com/cysic-labs/phase2_libs/releases/download/v1.0.0/verifier_linux > verifier \
     && chmod +x ./verifier
-RUN curl -L https://cysic-verifiers.oss-accelerate.aliyuncs.com/libzkp.so > libzkp.so
+RUN curl -L https://github.com/cysic-labs/phase2_libs/releases/download/v1.0.0/libdarwin_verifier.so > libdarwin_verifier.so
 COPY . .
 
 FROM ubuntu:22.04 AS final
