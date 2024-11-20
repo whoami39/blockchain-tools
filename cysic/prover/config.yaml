@@ -14,7 +14,7 @@ chain:
 ######################
 #   chain  setting   #
 ######################
-asset_path: ~/.cysic/assets
+asset_path: /root/.cysic/assets
 claim_reward_address: __EVM_ADDRESS__
 
 server:
