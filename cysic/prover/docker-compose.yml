@@ -4,6 +4,7 @@ services:
     volumes:
       - ./data/data:/app/data
       - ./data/cysic/:/root/.cysic/
+      - ./data/scroll_prover:/root/.scroll_prover
     env_file:
       - .env
     network_mode: "host"
