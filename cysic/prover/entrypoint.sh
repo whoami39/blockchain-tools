@@ -1,12 +1,18 @@
 #!/bin/sh
 
+if [ ! -z "$1" ]; then
+    EVM_ADDR="$1"
+fi
+
 if [ -z "${EVM_ADDR}" ]; then
     echo "Error: EVM_ADDR environment variable is not set or is empty"
     exit 1
 fi
 
-sed -i "s|__EVM_ADDRESS__|$EVM_ADDR|g" ./config.yaml
+rm -f /app/config.yaml
+cp /app/.template.yaml /app/config.yaml 
 
+sed -i "s|__EVM_ADDRESS__|$EVM_ADDR|g" /app/config.yaml
 if [ $? -ne 0 ]; then
     echo "Error: Failed to replace __EVM_ADDRESS__ in config.yaml"
     exit 1
@@ -21,4 +27,4 @@ echo "- Github: https://github.com/whoami39/blockchain-tools/tree/main/cysic/pro
 echo
 echo
 
-exec "$@"
+/app/prover
