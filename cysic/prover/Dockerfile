@@ -2,7 +2,7 @@ FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04
 
 WORKDIR /app
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl ca-certificates && \
+    apt-get install -y --no-install-recommends curl ca-certificates supervisor && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 RUN curl -L https://github.com/cysic-labs/phase2_libs/releases/download/v1.0.0/libdarwin_prover.so  > libdarwin_prover.so && \
