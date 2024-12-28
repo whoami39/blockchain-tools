@@ -42,7 +42,7 @@ do
         exit 130
     fi
 
-    message="`$EVM_ADDR` exited with status $exit_status, restarting..."
+    message="\`$EVM_ADDR\` exited with status $exit_status, restarting..."
 
     if [ -n "$FEISHU_WEBHOOK" ]; then
         send_feishu_message "$message" "$FEISHU_WEBHOOK"
