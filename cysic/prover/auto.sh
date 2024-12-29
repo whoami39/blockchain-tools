@@ -69,15 +69,15 @@ if [ ${#args[@]} -eq 1 ]; then
 fi
 
 if ! command -v supervisorctl &> /dev/null; then
-    sudo apt-get update && sudo apt-get install supervisor -y
+    apt-get update && apt-get install supervisor -y
 fi
 
 if ! pgrep -x "supervisord" &> /dev/null; then
-    sudo service supervisor start
+    service supervisor start
 fi
 
 if [ ! -f /etc/supervisor/conf.d/prover.conf ]; then
-    sudo bash -c "cat <<EOF > /etc/supervisor/conf.d/prover.conf
+    bash -c "cat <<EOF > /etc/supervisor/conf.d/prover.conf
 [program:prover]
 command=$workspace/auto.sh
 directory=$workspace
@@ -93,16 +93,16 @@ stdout_logfile_maxbytes=0
 stdout_logfile_backups=0
 
 EOF"
-    sudo supervisorctl reread
-    sudo supervisorctl update
+    supervisorctl reread
+    supervisorctl update
 fi
 
 
 _run_next () {
     local arg=$1
 
-    if sudo supervisorctl status prover | grep -q "RUNNING"; then
-        sudo supervisorctl stop prover
+    if supervisorctl status prover | grep -q "RUNNING"; then
+        supervisorctl stop prover
     fi
 
     rm -f $workspace/config.yaml
@@ -113,7 +113,7 @@ _run_next () {
     mv -f $workspace/data/*.db $workspace/data/bak/ &> /dev/null
 
     echo -e > $runtime_log
-    sudo supervisorctl start prover
+    supervisorctl start prover
 }
 
 current_index=0
@@ -142,7 +142,7 @@ check() {
     return 1
 }
 
-trap 'echo "Received SIGTERM/SIGINT signal, exiting..."; sudo supervisorctl stop prover; exit 143' SIGTERM SIGINT
+trap 'echo "Received SIGTERM/SIGINT signal, exiting..."; supervisorctl stop prover; exit 143' SIGTERM SIGINT
 
 next
 while true
