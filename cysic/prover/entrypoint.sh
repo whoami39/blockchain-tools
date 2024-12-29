@@ -3,8 +3,11 @@
 workspace=$(cd $(dirname $0) && pwd)
 
 args=("$@")
-if [ ${#args[@]} -eq 0 ]; then
-    if [ -z "${EVM_ADDR}" ]; then
+if [ ${#args[@]} -le 1 ]; then
+
+    EVM_ADDR=${1:-$EVM_ADDR}
+
+    if [ -z "$EVM_ADDR" ]; then
         echo "Error: EVM_ADDR environment variable is not set or is empty"
         exit 1
     fi
@@ -26,6 +29,10 @@ if [ ${#args[@]} -eq 0 ]; then
     echo "- Github: https://github.com/whoami39"
     echo
     echo
+
+    if pgrep -x "supervisord" &> /dev/null; then
+        sudo service supervisor stop
+    fi
 
     exec $workspace/prover
 else

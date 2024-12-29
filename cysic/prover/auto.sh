@@ -95,7 +95,7 @@ stdout_logfile_backups=0
 EOF"
     sudo supervisorctl reread
     sudo supervisorctl update
-fi  
+fi
 
 
 _run_next () {
@@ -110,7 +110,7 @@ _run_next () {
     sed -i "s|__EVM_ADDRESS__|$arg|g" $workspace/config.yaml
 
     mkdir -p $workspace/data/bak
-    mv -f $workspace/data/*.db $workspace/data/bak/
+    mv -f $workspace/data/*.db $workspace/data/bak/ &> /dev/null
 
     echo -e > $runtime_log
     sudo supervisorctl start prover
