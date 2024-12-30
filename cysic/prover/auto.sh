@@ -72,15 +72,12 @@ if ! command -v supervisorctl &> /dev/null; then
     apt-get update && apt-get install supervisor -y
 fi
 
-if ! pgrep -x "supervisord" &> /dev/null; then
-    service supervisor start
-fi
-
 if [ ! -f /etc/supervisor/conf.d/prover.conf ]; then
     bash -c "cat <<EOF > /etc/supervisor/conf.d/prover.conf
 [program:prover]
 command=$workspace/auto.sh
 directory=$workspace
+environment=LD_LIBRARY_PATH=/app,CHAIN_ID=534352
 autostart=false
 autorestart=true
 stdout_logfile=$runtime_log
@@ -97,6 +94,9 @@ EOF"
     supervisorctl update
 fi
 
+if ! pgrep -x "supervisord" &> /dev/null; then
+    service supervisor start
+fi
 
 _run_next () {
     local arg=$1
