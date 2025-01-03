@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e
 
 echo
 echo -e "\033[1;32m"
@@ -18,14 +17,14 @@ auto_log=$workspace/auto.log
 
 args=("$@")
 if [ ${#args[@]} -eq 0 ]; then
-    exec $workspace/prover
+    echo "Please provide at least one EVM address"
     exit 1
 fi
 
 for arg in "${args[@]}"; do
     if [[ ! $arg =~ ^0x[a-fA-F0-9]{40}$ ]]; then
         echo "err: $arg is not a valid evm address"
-        exit 0
+        exit 1
     fi
 done
 
@@ -62,105 +61,64 @@ EOF
     fi
 }
 
-is_single=0
-if [ ${#args[@]} -eq 1 ]; then
-    log "single mode"
-    is_single=1
-fi
-
-if ! command -v supervisorctl &> /dev/null; then
-    apt-get update && apt-get install supervisor -y
-fi
-
-if [ ! -f /etc/supervisor/conf.d/prover.conf ]; then
-    bash -c "cat <<EOF > /etc/supervisor/conf.d/prover.conf
-[program:prover]
-command=$workspace/auto.sh
-directory=$workspace
-environment=LD_LIBRARY_PATH=/app,CHAIN_ID=534352
-autostart=false
-autorestart=true
-stdout_logfile=$runtime_log
-stderr_logfile=NONE
-redirect_stderr=true
-user=root
-stopasgroup=true
-killasgroup=true
-stdout_logfile_maxbytes=0
-stdout_logfile_backups=0
-
-EOF"
-    supervisorctl reread
-    supervisorctl update
-fi
-
-if ! pgrep -x "supervisord" &> /dev/null; then
-    service supervisor start
-fi
-
-_run_next () {
-    local arg=$1
-
-    if supervisorctl status prover | grep -q "RUNNING"; then
-        supervisorctl stop prover
-    fi
+start() {
+    local address=$1
 
     rm -f $workspace/config.yaml
     cp $workspace/.template.yaml $workspace/config.yaml
-    sed -i "s|__EVM_ADDRESS__|$arg|g" $workspace/config.yaml
+    sed -i "s|__EVM_ADDRESS__|$address|g" $workspace/config.yaml
 
     mkdir -p $workspace/data/bak
     mv -f $workspace/data/*.db $workspace/data/bak/ &> /dev/null
 
     echo -e > $runtime_log
-    supervisorctl start prover
+    $workspace/prover &> $runtime_log &
+    prover_pid=$!
+
+    log "Started prover for address: $address (PID: $prover_pid)"
+    send_feishu_message "Prover [$address] started"
 }
 
-current_index=0
-next() {
-    local arg="${args[$current_index]}"
-
-    _run_next $arg
-    log "current work address: $arg"
-
-    local message="prover [$arg] started"
-    send_feishu_message "$message"
+stop() {
+    if [ ! -z "$prover_pid" ]; then
+        kill $prover_pid
+        wait $prover_pid 2>/dev/null
+        prover_pid=
+        log "Stopped prover"
+    fi
 }
 
 check() {
-    if [ ! -f $runtime_log ]; then
-        return 1
-    fi
-
-    if [ $is_single -eq 1 ]; then
-        return 1
-    fi
-
     if [ $(grep -c "resp: code: 0" $runtime_log) -ge 4 ]; then
         return 0
     fi
     return 1
 }
 
-trap 'echo "Received SIGTERM/SIGINT signal, exiting..."; supervisorctl stop prover; exit 143' SIGTERM SIGINT
+trap 'echo "Received SIGTERM/SIGINT signal, exiting..."; stop; exit 143' SIGTERM SIGINT
 
-next
+current_index=0
 while true
 do
-    if check; then
-        sleep 180 &
+    current_address="${args[$current_index]}"
+    start $current_address
+
+    while true
+    do
+        if check; then
+            sleep 180 &
+            wait $!
+
+            stop
+            log "Prover [$current_address] finished task"
+            send_feishu_message "Prover [$current_address] finished task"
+            break
+        fi
+        sleep 30 &
         wait $!
+    done
 
-        current_evm="${args[$current_index]}"
-        message="prover [$current_evm] finished task"
-        send_feishu_message "$message"
-
-        sleep 3 &
-        wait $!
-
-        current_index=$(( (current_index + 1) % ${#args[@]} ))
-        next
-    fi
-    sleep 60 &
+    current_index=$(( (current_index + 1) % ${#args[@]} ))
+    sleep 30 &
     wait $!
 done
