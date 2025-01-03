@@ -30,10 +30,6 @@ if [ ${#args[@]} -le 1 ]; then
     echo
     echo
 
-    if pgrep -x "supervisord" &> /dev/null; then
-        sudo service supervisor stop
-    fi
-
     exec $workspace/prover
 else
     exec $workspace/auto.sh "$@"
