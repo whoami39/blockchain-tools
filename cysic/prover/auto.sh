@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e
 
 echo
 echo -e "\033[1;32m"
