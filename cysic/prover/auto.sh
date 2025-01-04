@@ -81,10 +81,13 @@ start() {
 
 stop() {
     if [ ! -z "$prover_pid" ]; then
-        kill $prover_pid
-        wait $prover_pid 2>/dev/null
+        log "Attempting to stop prover (PID: $prover_pid)"
+        kill $prover_pid 2>/dev/null || true
+        wait $prover_pid 2>/dev/null || true
         prover_pid=
         log "Stopped prover"
+    else
+        log "No prover process to stop"
     fi
 }
 
