@@ -36,7 +36,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-POOL=${POOL:-"stratum+tcp://aleo-asia.f2pool.com:4400"}
+POOL=${POOL:-"stratum+ssl://aleo-asia.f2pool.com:4420"}
 ACCOUNT=${ACCOUNT:-"whoami39"}
 WORKER=${WORKER:-"$(hostname | md5sum | cut -c1-8)"}
 GPU=${GPU:-"$(get_available_gpus)"}
