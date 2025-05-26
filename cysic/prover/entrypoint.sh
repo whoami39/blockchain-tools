@@ -2,6 +2,8 @@
 
 workspace=$(cd $(dirname $0) && pwd)
 
+ETH_PROOF_ENDPOINT=${ETH_PROOF_ENDPOINT:-https://ethereum-rpc.publicnode.com}
+
 args=("$@")
 if [ ${#args[@]} -le 1 ]; then
 
@@ -16,18 +18,15 @@ if [ ${#args[@]} -le 1 ]; then
     cp $workspace/.template.yaml $workspace/config.yaml 
 
     sed -i "s|__EVM_ADDRESS__|$EVM_ADDR|g" $workspace/config.yaml
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to replace __EVM_ADDRESS__ in config.yaml"
-        exit 1
-    fi
+    sed -i "s|__ETH_PROOF_ENDPOINT__|$ETH_PROOF_ENDPOINT|g" $workspace/config.yaml
 
     echo
-    echo
-    echo "[Testnet Phase 2] EVM_ADDR: \`$EVM_ADDR\`, CHAIN_ID: $CHAIN_ID"
-    echo
-    echo "- Telegram: https://t.me/blockchain_minter"
+    echo -e "\033[1;32m"
+    echo "[Testnet Phase 3] EVM_ADDR: \`$EVM_ADDR\`, ETH_PROOF_ENDPOINT: \`$ETH_PROOF_ENDPOINT\`"
+    echo -e "\033[3;36m"
+    echo "- Telegram Group: https://t.me/blockchain_minter"
     echo "- Github: https://github.com/whoami39"
-    echo
+    echo -e "\033[0m"
     echo
 
     exec $workspace/prover
