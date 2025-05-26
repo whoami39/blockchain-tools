@@ -14,7 +14,7 @@ fi
 
 echo
 echo
-echo "[Testnet Phase 2] EVM_ADDR: \`$EVM_ADDR\`, CHAIN_ID: $CHAIN_ID"
+echo "[Testnet Phase 3] EVM_ADDR: \`$EVM_ADDR\`, CHAIN_ID: $CHAIN_ID"
 echo
 echo "- Telegram: https://t.me/blockchain_minter"
 echo "- Github: https://github.com/whoami39/blockchain-tools/tree/main/cysic/verifier"
