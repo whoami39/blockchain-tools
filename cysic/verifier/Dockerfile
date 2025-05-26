@@ -2,9 +2,10 @@ FROM ubuntu:22.04 AS dl
 
 WORKDIR /app
 RUN apt-get update && apt-get install -y curl ca-certificates
-RUN curl -L https://github.com/cysic-labs/phase2_libs/releases/download/v1.0.0/verifier_linux > verifier \
-    && chmod +x ./verifier
-RUN curl -L https://github.com/cysic-labs/phase2_libs/releases/download/v1.0.0/libdarwin_verifier.so > libdarwin_verifier.so
+RUN curl -L https://github.com/cysic-labs/cysic-phase3/releases/download/v1.0.0/verifier_linux > verifier && \
+    curl -L https://github.com/cysic-labs/cysic-phase3/releases/download/v1.0.0/libdarwin_verifier.so > libdarwin_verifier.so && \
+    curl -L https://github.com/cysic-labs/cysic-phase3/releases/download/v1.0.0/librsp.so > librsp.so && \
+    chmod +x ./verifier
 COPY . .
 
 FROM ubuntu:22.04 AS final
