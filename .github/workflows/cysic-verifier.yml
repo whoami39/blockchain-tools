@@ -44,5 +44,6 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/cysic-verifier:latest
             ${{ secrets.DOCKER_USERNAME }}/cysic-testnet-verifier:latest
-            ${{ secrets.DOCKER_USERNAME }}/cysic-verifier:v2
-            ${{ secrets.DOCKER_USERNAME }}/cysic-testnet-verifier:v2
+            ${{ secrets.DOCKER_USERNAME }}/cysic-verifier:v3
+            ${{ secrets.DOCKER_USERNAME }}/cysic-testnet-verifier:v3
+
