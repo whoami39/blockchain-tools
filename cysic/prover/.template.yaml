@@ -13,15 +13,16 @@ chain:
 ######################
 #   chain  setting   #
 ######################
-asset_path: ~/.cysic/assets
+asset_path: /root/.cysic/assets
 claim_reward_address: __EVM_ADDRESS__
 
 server:
   # don't modify this
   cysic_endpoint: "https://ws-pre.prover.xyz"
 available_task_type:
-  - ethProof
   - scroll
+  - ethProof
+
 task_config:
   eth_proof:
     endpoint: __ETH_PROOF_ENDPOINT__
