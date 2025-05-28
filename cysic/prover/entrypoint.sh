@@ -2,8 +2,6 @@
 
 workspace=$(cd $(dirname $0) && pwd)
 
-ETH_PROOF_ENDPOINT=${ETH_PROOF_ENDPOINT:-https://ethereum-rpc.publicnode.com}
-
 args=("$@")
 if [ ${#args[@]} -le 1 ]; then
 
@@ -15,7 +13,11 @@ if [ ${#args[@]} -le 1 ]; then
     fi
 
     rm -f $workspace/config.yaml
-    cp $workspace/.template.yaml $workspace/config.yaml 
+    cp $workspace/.template.yaml $workspace/config.yaml
+
+    if [ -z "$ETH_PROOF_ENDPOINT" ]; then
+        sed -i '/ - ethProof/{N;N;N;N;d;}' $workspace/config.yaml
+    fi
 
     sed -i "s|__EVM_ADDRESS__|$EVM_ADDR|g" $workspace/config.yaml
     sed -i "s|__ETH_PROOF_ENDPOINT__|$ETH_PROOF_ENDPOINT|g" $workspace/config.yaml
