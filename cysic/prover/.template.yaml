@@ -18,7 +18,7 @@ claim_reward_address: __EVM_ADDRESS__
 
 server:
   # don't modify this
-  cysic_endpoint: "https://ws-pre.prover.xyz"
+  cysic_endpoint: "https://ws.prover.xyz"
 available_task_type:
   - scroll
   - ethProof
