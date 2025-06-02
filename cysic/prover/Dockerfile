@@ -9,8 +9,8 @@ RUN apt-get update && \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="$PATH:/root/.cargo/bin:/root/.sp1/bin"
 RUN mkdir -p /root/.sp1/bin && \
-    curl -L "https://raw.githubusercontent.com/succinctlabs/sp1/main/sp1up/sp1up" -o "/root/.sp1/bin/sp1up" && \
-    chmod +x "/root/.sp1/bin/sp1up" && \
+    curl -L https://raw.githubusercontent.com/succinctlabs/sp1/main/sp1up/sp1up -o /root/.sp1/bin/sp1up && \
+    chmod +x /root/.sp1/bin/sp1up && \
     sp1up
 
 WORKDIR /app

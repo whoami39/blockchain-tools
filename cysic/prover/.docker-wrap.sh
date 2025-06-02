@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# create by h3110w0r1d ( Telegram: https://t.me/blockchain_minter )
+# Fake by h3110w0r1d ( Telegram: https://t.me/blockchain_minter )
 
 SERVER_BIN="/usr/local/bin/moongate-server"
 SERVER_PID=""
@@ -115,19 +115,19 @@ docker_wrap() {
         if [[ -f "$SERVER_PID_FILE" ]]; then
             SERVER_PID=$(cat "$SERVER_PID_FILE")
             if kill -0 "$SERVER_PID" 2>/dev/null; then
-                echo "CONTAINER ID   IMAGE     COMMAND      CREATED      STATUS       PORTS                    NAMES"
-                echo "mock_$(echo $SERVER_PID | cut -c1-12)   moongate  ./moongate-server   Up 2 minutes   0.0.0.0:3000->3000/tcp   moongate-container"
+                printf "%-15s %-15s %-15s %-15s %-15s %-30s %s\n" "CONTAINER ID" "IMAGE" "COMMAND" "CREATED" "STATUS" "PORTS" "NAMES"
+                printf "%-15s %-15s %-15s %-15s %-15s %-30s %s\n" "fake_$(echo $SERVER_PID)" "moongate:v4.1.0" "moongate-server" "2 minutes ago" "Up 2 minutes" "0.0.0.0:3000->3000/tcp" "moongate-container"
             else
-                echo "CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS   PORTS   NAMES"
+                echo "CONTAINER ID   IMAGE   COMMAND   CREATED   STATUS   PORTS   NAMES"
                 rm -f "$SERVER_PID_FILE"
             fi
         else
-            echo "CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS   PORTS   NAMES"
+            echo "CONTAINER ID   IMAGE   COMMAND   CREATED   STATUS   PORTS   NAMES"
         fi
         ;;
         
     *)
-        echo "create by h3ll0w0r1d"
+        echo "Fake by h3110w0r1d ( Telegram: https://t.me/blockchain_minter )"
         ;;
   esac
 }
